@@ -1,4 +1,4 @@
-all: rtclock.o parSum.c seqSum.c
+all: rtclock.o parSum.h parSum.c seqSum.c
 	gcc -Wall -o parSum parSum.c rtclock.o -lpthread
 	gcc -Wall -o seqSum seqSum.c rtclock.o
 
