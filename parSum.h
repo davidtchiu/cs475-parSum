@@ -1,6 +1,3 @@
-// /** globals (shared) */
-// extern long *partial_sums; // to hold outputs from threads
-
 /** struct to hold parameters to partialSum() **/
 typedef struct thread_args
 {
