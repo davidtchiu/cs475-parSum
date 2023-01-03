@@ -7,14 +7,12 @@
 /**
  * Main function
  */
-int main()
-{
+int main() {
   double start = rtclock(); // start stopwatch
 
   long i;
   long finalSum = 0;
-  for (i = 0; i <= N; i++)
-  {
+  for (i = 0; i <= N; i++)   {
     finalSum += i;
   }
 
