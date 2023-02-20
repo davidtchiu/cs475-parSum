@@ -3,12 +3,11 @@
 #include <stdio.h>
 #include "parSum.h"
 #include "rtclock.h"
-
 #define N 1000000000
-#define NUM_THREADS 4
+#define NUM_THREADS 2
 
 /**
- * globals
+ * Globals (shared)
  */
 long *partial_sums; // pointer to array to store each thread's partial sums
 
