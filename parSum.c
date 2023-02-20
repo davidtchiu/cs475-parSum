@@ -18,29 +18,30 @@ long *partial_sums; // pointer to array to store each thread's partial sums
 int main(int argc, char *argv[]) {
   double start = rtclock(); // start stopwatch
 
-  long finalSum = 0;
+  /** FORK PHASE **/
 
   // space to hold partial sums from each thread
   partial_sums = (long*) malloc(NUM_THREADS * sizeof(long));
 
-  // allocate space to hold threads
-  pthread_t *threads = (pthread_t*) malloc(NUM_THREADS * sizeof(pthread_t));
-
   // prepare thread arguments
-  long i;
   thread_args *args = (thread_args*) malloc(NUM_THREADS * sizeof(thread_args));
-  for (i = 0; i < NUM_THREADS; i++) {
-    // prepare arguments for a thread
+  for (int i = 0; i < NUM_THREADS; i++) {
     args[i].tid = i;
     args[i].begin = i * N / NUM_THREADS + 1;
     args[i].end = (i + 1) * N / NUM_THREADS;
+  }
 
-    // fire off a thread
+  // allocate space to hold threads
+  pthread_t *threads = (pthread_t*) malloc(NUM_THREADS * sizeof(pthread_t));
+  for (int i = 0; i < NUM_THREADS; i++) {
     pthread_create(&threads[i], NULL, partialSum, &args[i]);
   }
 
-  // reap threads, collect each partially computed sum
-  for (i = 0; i < NUM_THREADS; i++) {
+  /** JOIN PHASE **/
+
+  // wait for threads to finish; combine partially computed sum
+  long finalSum = 0;
+  for (int i = 0; i < NUM_THREADS; i++) {
     pthread_join(threads[i], NULL);
     finalSum += partial_sums[i];
   }
@@ -52,8 +53,13 @@ int main(int argc, char *argv[]) {
 
   // clean up dynamically allocated memory
   free(partial_sums);
+  partial_sums = NULL;
+
   free(threads);
+  threads = NULL;
+
   free(args);
+  args = NULL;
 
   return 0;
 }
@@ -63,17 +69,13 @@ int main(int argc, char *argv[]) {
  * Computes a partial sum: begin + begin+1 + ... + end
  * @param *arguments a pointer to a thread_args struct
  */
-void *partialSum(void *args)
-{
+void *partialSum(void *args) {
   // cast input as struct thread_args
-  thread_args *params = (thread_args *)args;
+  thread_args *params = (thread_args*) args;
 
   // sum for "chunk" of numbers (begin + ... + end)
   long local_sum = 0;
-
-  long i;
-  for (i = params->begin; i <= params->end; i++)
-  {
+  for (long i = params->begin; i <= params->end; i++) {
     local_sum += i;
   }
 
