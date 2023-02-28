@@ -4,7 +4,7 @@
 #include "parSum.h"
 #include "rtclock.h"
 #define N 1000000000
-#define NUM_THREADS 2
+#define NUM_THREADS 16
 
 /**
  * Globals (shared)
